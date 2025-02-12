@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:app_task/src/core/exceptions.dart';
+import 'package:app_task/src/utils/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_task/config.dart';
@@ -9,8 +12,10 @@ import 'package:app_task/src/core/app_constants.dart';
 import 'package:app_task/src/domain/database/core/app_database.dart';
 import 'package:app_task/src/presentation/web_view/web_view_page.dart';
 import 'package:app_task/src/utils/string_utils.dart';
+import 'package:http/http.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class AuthService {
   final List<String> _scopes = [
@@ -32,6 +37,40 @@ class AuthService {
       codeVerifier,
       successUrl: Config.appFlavor.authRedirectUri,
     );
+  }
+
+  Future<Map<String, dynamic>> fetchLogin(
+      String? email, String? password) async {
+    Map<String, dynamic> responseVal = {};
+    try {
+      const url = "https://reqres.in/api/login";
+      final data = jsonEncode(
+        {"email": email, "password": password},
+      );
+      final Response response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: data,
+      );
+      responseVal = toGenericMap(response.body);
+      if (response.statusCode == 200) {
+        return responseVal;
+      } else if (response.statusCode == 400) {
+        throw APIValidationFailException(
+          message: toString(responseVal['message']),
+        );
+      }
+    } catch (e) {
+      if (e is APIValidationFailException) {
+        rethrow;
+      }
+      throw CustomException(
+        'Login Failed.',
+        message: e.toString(),
+      );
+
+    }
+    return responseVal;
   }
 
   Future<oauth2.Credentials?> signInWindows({

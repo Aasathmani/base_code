@@ -37,3 +37,9 @@ class APIFailedException implements Exception {
 
   APIFailedException({this.message});
 }
+
+class APIValidationFailException implements Exception {
+  final String? message;
+
+  APIValidationFailException({this.message});
+}

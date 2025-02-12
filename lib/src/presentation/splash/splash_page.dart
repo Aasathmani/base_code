@@ -1,3 +1,4 @@
+import 'package:app_task/src/presentation/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app_task/src/application/splash/splash_bloc.dart';
@@ -32,7 +33,7 @@ class _SplashState extends BaseState<SplashPage> {
     return BlocConsumer<SplashBloc, SplashState>(
       listener: (context, state) {
         if (state.redirectToLogin ?? false) {
-         // Navigator.pushReplacementNamed(context, LoginPage.route);
+         Navigator.pushReplacementNamed(context, LoginPage.route);
         }
       },
       builder: (context, state) {
@@ -51,7 +52,7 @@ class _SplashState extends BaseState<SplashPage> {
                   fit: BoxFit.cover,
                 ),
               ),
-              child: Center(child: _appLogo()),
+              //child: Center(child: _appLogo()),
             ),
           ),
         );
@@ -59,11 +60,11 @@ class _SplashState extends BaseState<SplashPage> {
     );
   }
 
-  Widget _appLogo() {
-    return Image.asset(
-      AppIcons.kAppLogo,
-      fit: BoxFit.contain,
-      width: 150,
-    );
-  }
+  // Widget _appLogo() {
+  //   return Image.asset(
+  //     AppIcons.kAppLogo,
+  //     fit: BoxFit.contain,
+  //     width: 150,
+  //   );
+  // }
 }

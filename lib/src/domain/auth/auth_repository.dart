@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:app_task/src/domain/auth/auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -53,6 +54,19 @@ class AuthRepository {
       128,
       (i) => _charset[Random.secure().nextInt(_charset.length)],
     ).join();
+  }
+
+  Future<Auth?> getLogin(String email, String password) async {
+    try {
+      final dataFromResponse = await authServices.fetchLogin(email, password);
+      final Auth auth = Auth.fromJson(dataFromResponse);
+      return auth;
+    } catch (e) {
+      if (e is APIValidationFailException) {
+        rethrow;
+      }
+    }
+    return null;
   }
 
   Future<User?> signIn() async {

@@ -1,4 +1,8 @@
-
+import 'package:app_task/src/application/form/form_bloc.dart';
+import 'package:app_task/src/application/home/home_bloc.dart';
+import 'package:app_task/src/application/login/login_bloc.dart';
+import 'package:app_task/src/application/register/register_bloc.dart';
+import 'package:app_task/src/presentation/home/home_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:app_task/src/application/profile/profile_bloc.dart';
 import 'package:app_task/src/application/splash/splash_bloc.dart';
@@ -20,11 +24,26 @@ ProfileBloc provideProfileBloc() {
   return ProfileBloc();
 }
 
-// LoginBloc provideLoginBloc() {
-//   return LoginBloc(
-//       authRepository: provideAuthRepository(),
-//       userRepository: provideUserRepository());
-// }
+LoginBloc provideLoginBloc() {
+  return LoginBloc(
+    authRepository: provideAuthRepository(),
+    // userRepository: provideUserRepository()
+  );
+}
+
+RegisterBloc provideRegisterBloc() {
+  return RegisterBloc();
+}
+
+HomeBloc provideHomeBloc() {
+  return HomeBloc(
+    homeRepository: provideHomeRepository(),
+  );
+}
+
+FormFillBloc provideFormFillBloc() {
+  return FormFillBloc();
+}
 
 WebViewBloc provideWebViewBloc(WebViewArgument argument) {
   return WebViewBloc(

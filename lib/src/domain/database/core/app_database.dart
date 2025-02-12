@@ -1,3 +1,4 @@
+import 'package:app_task/src/domain/database/task_list_dao.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:app_task/src/domain/database/auth_token_dao.dart';
@@ -12,11 +13,13 @@ part 'app_database.g.dart';
     Users,
     AuthTokens,
     Notifications,
+    TaskLists,
   ],
   daos: [
     UserDao,
     AuthTokenDao,
     NotificationDao,
+    TaskListDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -119,5 +122,6 @@ class AppDatabase extends _$AppDatabase {
         users,
         authTokens,
         notifications,
+        taskLists,
       ];
 }

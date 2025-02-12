@@ -183,50 +183,12 @@ class AppIcons {
   static const String kBgLandscape = 'assets/images/bg_landscape.jpg';
   static const String kDownArrow = 'assets/images/ic_down_arrow.svg';
   static const String kLogo = 'assets/images/heads_logo.png';
-  static const String kAppLogo = 'assets/images/splash_logo.png';
-  static const String kUser = 'assets/images/ic_user.svg';
-  static const String kPassword = 'assets/images/ic_password.svg';
-  static const String kReportees = 'assets/images/ic_reportees.svg';
-  static const String kLeaveManagement =
-      'assets/images/ic_leave_management.svg';
-  static const String kHoliday = 'assets/images/ic_holiday.svg';
-  static const String kForwardArrow = 'assets/images/ic_forward_arrow.svg';
-  static const String kWorkFromHome = 'assets/images/ic_work_from_home.svg';
-  static const String kCalenderBottomNavigation =
-      'assets/images/ic_calendar.svg';
-  static const String kTCubeBottomNavigation = 'assets/images/ic_time.svg';
-  static const String kCreditCardBottomNavigation =
-      'assets/images/ic_credit_cards.svg';
-  static const String kInsuranceBottomNavigation =
-      'assets/images/ic_insurance.svg';
-  static const String kSearch = 'assets/images/ic_search.svg';
-  static const String kEnabledCircle = 'assets/images/ic_circle_enabled.svg';
-  static const String kDisabledCircle = 'assets/images/ic_circle_disabled.svg';
-  static const String kLeave = 'assets/images/ic_leave.svg';
-  static const String kTCube = 'assets/images/ic_tcube.svg';
-  static const String kTax = 'assets/images/ic_tax.svg';
-  static const String kSurvey = 'assets/images/ic_survey.svg';
-  static const String kSwipe = 'assets/images/ic_swipe.svg';
-  static const String kEmployee = 'assets/images/ic_employee.svg';
-  static const String kFoodAndCab = 'assets/images/ic_food_cab.svg';
-  static const String kInsurance = 'assets/images/ic_insurance.svg';
-  static const String kTour = 'assets/images/ic_tour.svg';
-  static const String kQMS = 'assets/images/ic_qms.svg';
-  static const String kISMS = 'assets/images/ic_isms.svg';
-  static const String kPolicies = 'assets/images/ic_policies.svg';
-  static const String kAppraisal = 'assets/images/ic_appraisal.svg';
-  static const String kKnowledgePortal = 'assets/images/ic_knowledge.svg';
-  static const String kDirectory = 'assets/images/ic_directory.svg';
-  static const String kContests = 'assets/images/ic_contest.svg';
-  static const String kBlog = 'assets/images/ic_blog.svg';
-  static const String kHamburger = 'assets/images/ic_hamburger.svg';
-  static const String kSelect = 'assets/images/ic_tick_circle_selected.svg';
-  static const String kUnSelect = 'assets/images/ic_tick_circle_unselected.svg';
-  static const String kLogOut = 'assets/images/ic_logout.svg';
-  static const String kProjectUnlock = 'assets/images/ic_project_unlock.svg';
-  static const String kOtpImage = 'assets/images/im_otp.png';
-  static const String kLoginBg = 'assets/images/bg_landscape.png';
+  static const String kLogoSvg = 'assets/images/logo.svg';
 }
+class PriorityOptions{
+  static List<String> priorityOptions = ["High", "Medium", "Low"];
+}
+
 
 class APIEndpoints {
   // AUTH

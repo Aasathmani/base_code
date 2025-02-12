@@ -157,7 +157,7 @@ class _BorderedTextFieldState extends State<BorderedTextField> {
             enabled: widget.enabled,
             controller: _controller,
             onTap: widget.onTap,
-            cursorColor: Theme.of(context).textSelectionTheme.cursorColor,
+            cursorColor: AppColors.black,
             keyboardType: widget.textInputType,
             textInputAction: widget.textInputAction,
             maxLines: widget.maxLines,
@@ -167,7 +167,7 @@ class _BorderedTextFieldState extends State<BorderedTextField> {
             ],
             style: widget.style ??
                 TextStyles.title2Bold(context)?.copyWith(
-                  color: widget.textColor ?? theme.tertiary,
+                  color: widget.textColor ?? AppColors.black,
                 ),
             decoration: InputDecoration(
               filled: true,
@@ -175,9 +175,9 @@ class _BorderedTextFieldState extends State<BorderedTextField> {
               enabledBorder: OutlineInputBorder(
                 borderRadius:
                     BorderRadius.circular(Units.kTextFieldBorderRadius),
-                borderSide: BorderSide(
+                borderSide:const BorderSide(
                   width: 1.5,
-                  color: theme.onSecondaryContainer,
+                  color: AppColors.grey,
                 ),
               ),
               disabledBorder: OutlineInputBorder(
@@ -192,7 +192,7 @@ class _BorderedTextFieldState extends State<BorderedTextField> {
                     BorderRadius.circular(Units.kTextFieldBorderRadius),
                 borderSide: BorderSide(
                   width: 1.5,
-                  color: theme.primary,
+                  color: AppColors.ashBlue,
                 ),
               ),
               // isDense: false,

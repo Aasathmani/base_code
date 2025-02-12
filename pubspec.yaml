@@ -42,7 +42,7 @@ dependencies:
 
   # Drift Database
   drift: ^2.13.0
-  #sqlite3_flutter_libs: ^0.5.17
+  sqlite3_flutter_libs: ^0.5.30
 
   # NoSQL storage
   hive: ^2.2.3

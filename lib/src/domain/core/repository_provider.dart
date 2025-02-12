@@ -1,3 +1,5 @@
+import 'package:app_task/src/domain/home/home_repository.dart';
+import 'package:app_task/src/domain/home/home_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -57,6 +59,12 @@ UserService provideUserService() {
   return UserService(
     configRepository: provideConfigRepository(),
   );
+}
+
+HomeRepository provideHomeRepository() {
+  return HomeRepository.instance ??= HomeRepository(
+      homeService: HomeService(),
+      taskListDao: provideAppDatabase().taskListDao);
 }
 
 AuthRepository provideAuthRepository() {

@@ -46,9 +46,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   List<GeneratedColumn> get $columns =>
       [id, firstName, lastName, designation, email, profilePhoto];
   @override
-  String get aliasedName => _alias ?? 'users';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'users';
+  String get actualTableName => $name;
+  static const String $name = 'users';
   @override
   VerificationContext validateIntegrity(Insertable<User> instance,
       {bool isInserting = false}) {
@@ -206,6 +207,20 @@ class User extends DataClass implements Insertable<User> {
         profilePhoto:
             profilePhoto.present ? profilePhoto.value : this.profilePhoto,
       );
+  User copyWithCompanion(UsersCompanion data) {
+    return User(
+      id: data.id.present ? data.id.value : this.id,
+      firstName: data.firstName.present ? data.firstName.value : this.firstName,
+      lastName: data.lastName.present ? data.lastName.value : this.lastName,
+      designation:
+          data.designation.present ? data.designation.value : this.designation,
+      email: data.email.present ? data.email.value : this.email,
+      profilePhoto: data.profilePhoto.present
+          ? data.profilePhoto.value
+          : this.profilePhoto,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('User(')
@@ -370,9 +385,10 @@ class $AuthTokensTable extends AuthTokens
   @override
   List<GeneratedColumn> get $columns => [accessToken, idToken, refreshToken];
   @override
-  String get aliasedName => _alias ?? 'auth_tokens';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'auth_tokens';
+  String get actualTableName => $name;
+  static const String $name = 'auth_tokens';
   @override
   VerificationContext validateIntegrity(Insertable<AuthToken> instance,
       {bool isInserting = false}) {
@@ -478,6 +494,17 @@ class AuthToken extends DataClass implements Insertable<AuthToken> {
         refreshToken:
             refreshToken.present ? refreshToken.value : this.refreshToken,
       );
+  AuthToken copyWithCompanion(AuthTokensCompanion data) {
+    return AuthToken(
+      accessToken:
+          data.accessToken.present ? data.accessToken.value : this.accessToken,
+      idToken: data.idToken.present ? data.idToken.value : this.idToken,
+      refreshToken: data.refreshToken.present
+          ? data.refreshToken.value
+          : this.refreshToken,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('AuthToken(')
@@ -646,9 +673,10 @@ class $NotificationsTable extends Notifications
         updatedAt
       ];
   @override
-  String get aliasedName => _alias ?? 'notifications';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'notifications';
+  String get actualTableName => $name;
+  static const String $name = 'notifications';
   @override
   VerificationContext validateIntegrity(Insertable<NotificationData> instance,
       {bool isInserting = false}) {
@@ -865,6 +893,25 @@ class NotificationData extends DataClass
         createdAt: createdAt.present ? createdAt.value : this.createdAt,
         updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
       );
+  NotificationData copyWithCompanion(NotificationsCompanion data) {
+    return NotificationData(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      body: data.body.present ? data.body.value : this.body,
+      notificationType: data.notificationType.present
+          ? data.notificationType.value
+          : this.notificationType,
+      notifierId:
+          data.notifierId.present ? data.notifierId.value : this.notifierId,
+      notifierType: data.notifierType.present
+          ? data.notifierType.value
+          : this.notifierType,
+      isRead: data.isRead.present ? data.isRead.value : this.isRead,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('NotificationData(')
@@ -1041,19 +1088,1011 @@ class NotificationsCompanion extends UpdateCompanion<NotificationData> {
   }
 }
 
+class $TaskListsTable extends TaskLists
+    with TableInfo<$TaskListsTable, TaskList> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TaskListsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+      'user_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _completedMeta =
+      const VerificationMeta('completed');
+  @override
+  late final GeneratedColumn<bool> completed = GeneratedColumn<bool>(
+      'completed', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("completed" IN (0, 1))'));
+  @override
+  List<GeneratedColumn> get $columns => [id, userId, title, completed];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'task_lists';
+  @override
+  VerificationContext validateIntegrity(Insertable<TaskList> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('completed')) {
+      context.handle(_completedMeta,
+          completed.isAcceptableOrUnknown(data['completed']!, _completedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TaskList map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TaskList(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      completed: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}completed']),
+    );
+  }
+
+  @override
+  $TaskListsTable createAlias(String alias) {
+    return $TaskListsTable(attachedDatabase, alias);
+  }
+}
+
+class TaskList extends DataClass implements Insertable<TaskList> {
+  final String id;
+  final String userId;
+  final String title;
+  final bool? completed;
+  const TaskList(
+      {required this.id,
+      required this.userId,
+      required this.title,
+      this.completed});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || completed != null) {
+      map['completed'] = Variable<bool>(completed);
+    }
+    return map;
+  }
+
+  TaskListsCompanion toCompanion(bool nullToAbsent) {
+    return TaskListsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      title: Value(title),
+      completed: completed == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completed),
+    );
+  }
+
+  factory TaskList.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TaskList(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      title: serializer.fromJson<String>(json['title']),
+      completed: serializer.fromJson<bool?>(json['completed']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'title': serializer.toJson<String>(title),
+      'completed': serializer.toJson<bool?>(completed),
+    };
+  }
+
+  TaskList copyWith(
+          {String? id,
+          String? userId,
+          String? title,
+          Value<bool?> completed = const Value.absent()}) =>
+      TaskList(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        title: title ?? this.title,
+        completed: completed.present ? completed.value : this.completed,
+      );
+  TaskList copyWithCompanion(TaskListsCompanion data) {
+    return TaskList(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      title: data.title.present ? data.title.value : this.title,
+      completed: data.completed.present ? data.completed.value : this.completed,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaskList(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('title: $title, ')
+          ..write('completed: $completed')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, userId, title, completed);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TaskList &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.title == this.title &&
+          other.completed == this.completed);
+}
+
+class TaskListsCompanion extends UpdateCompanion<TaskList> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> title;
+  final Value<bool?> completed;
+  final Value<int> rowid;
+  const TaskListsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.title = const Value.absent(),
+    this.completed = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TaskListsCompanion.insert({
+    required String id,
+    required String userId,
+    required String title,
+    this.completed = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        userId = Value(userId),
+        title = Value(title);
+  static Insertable<TaskList> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? title,
+    Expression<bool>? completed,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (title != null) 'title': title,
+      if (completed != null) 'completed': completed,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TaskListsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? userId,
+      Value<String>? title,
+      Value<bool?>? completed,
+      Value<int>? rowid}) {
+    return TaskListsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      completed: completed ?? this.completed,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (completed.present) {
+      map['completed'] = Variable<bool>(completed.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaskListsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('title: $title, ')
+          ..write('completed: $completed, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $UsersTable users = $UsersTable(this);
   late final $AuthTokensTable authTokens = $AuthTokensTable(this);
   late final $NotificationsTable notifications = $NotificationsTable(this);
+  late final $TaskListsTable taskLists = $TaskListsTable(this);
   late final UserDao userDao = UserDao(this as AppDatabase);
   late final AuthTokenDao authTokenDao = AuthTokenDao(this as AppDatabase);
   late final NotificationDao notificationDao =
       NotificationDao(this as AppDatabase);
+  late final TaskListDao taskListDao = TaskListDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [users, authTokens, notifications];
+      [users, authTokens, notifications, taskLists];
+}
+
+typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
+  required String id,
+  required String firstName,
+  required String lastName,
+  Value<String?> designation,
+  Value<String?> email,
+  Value<String?> profilePhoto,
+  Value<int> rowid,
+});
+typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
+  Value<String> id,
+  Value<String> firstName,
+  Value<String> lastName,
+  Value<String?> designation,
+  Value<String?> email,
+  Value<String?> profilePhoto,
+  Value<int> rowid,
+});
+
+class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get firstName => $composableBuilder(
+      column: $table.firstName, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get lastName => $composableBuilder(
+      column: $table.lastName, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get designation => $composableBuilder(
+      column: $table.designation, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get email => $composableBuilder(
+      column: $table.email, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get profilePhoto => $composableBuilder(
+      column: $table.profilePhoto, builder: (column) => ColumnFilters(column));
+}
+
+class $$UsersTableOrderingComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get firstName => $composableBuilder(
+      column: $table.firstName, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get lastName => $composableBuilder(
+      column: $table.lastName, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get designation => $composableBuilder(
+      column: $table.designation, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get email => $composableBuilder(
+      column: $table.email, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get profilePhoto => $composableBuilder(
+      column: $table.profilePhoto,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$UsersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UsersTable> {
+  $$UsersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get firstName =>
+      $composableBuilder(column: $table.firstName, builder: (column) => column);
+
+  GeneratedColumn<String> get lastName =>
+      $composableBuilder(column: $table.lastName, builder: (column) => column);
+
+  GeneratedColumn<String> get designation => $composableBuilder(
+      column: $table.designation, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get profilePhoto => $composableBuilder(
+      column: $table.profilePhoto, builder: (column) => column);
+}
+
+class $$UsersTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $UsersTable,
+    User,
+    $$UsersTableFilterComposer,
+    $$UsersTableOrderingComposer,
+    $$UsersTableAnnotationComposer,
+    $$UsersTableCreateCompanionBuilder,
+    $$UsersTableUpdateCompanionBuilder,
+    (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
+    User,
+    PrefetchHooks Function()> {
+  $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UsersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UsersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UsersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> firstName = const Value.absent(),
+            Value<String> lastName = const Value.absent(),
+            Value<String?> designation = const Value.absent(),
+            Value<String?> email = const Value.absent(),
+            Value<String?> profilePhoto = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UsersCompanion(
+            id: id,
+            firstName: firstName,
+            lastName: lastName,
+            designation: designation,
+            email: email,
+            profilePhoto: profilePhoto,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String firstName,
+            required String lastName,
+            Value<String?> designation = const Value.absent(),
+            Value<String?> email = const Value.absent(),
+            Value<String?> profilePhoto = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              UsersCompanion.insert(
+            id: id,
+            firstName: firstName,
+            lastName: lastName,
+            designation: designation,
+            email: email,
+            profilePhoto: profilePhoto,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$UsersTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $UsersTable,
+    User,
+    $$UsersTableFilterComposer,
+    $$UsersTableOrderingComposer,
+    $$UsersTableAnnotationComposer,
+    $$UsersTableCreateCompanionBuilder,
+    $$UsersTableUpdateCompanionBuilder,
+    (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
+    User,
+    PrefetchHooks Function()>;
+typedef $$AuthTokensTableCreateCompanionBuilder = AuthTokensCompanion Function({
+  required String accessToken,
+  required String idToken,
+  Value<String?> refreshToken,
+  Value<int> rowid,
+});
+typedef $$AuthTokensTableUpdateCompanionBuilder = AuthTokensCompanion Function({
+  Value<String> accessToken,
+  Value<String> idToken,
+  Value<String?> refreshToken,
+  Value<int> rowid,
+});
+
+class $$AuthTokensTableFilterComposer
+    extends Composer<_$AppDatabase, $AuthTokensTable> {
+  $$AuthTokensTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get accessToken => $composableBuilder(
+      column: $table.accessToken, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get idToken => $composableBuilder(
+      column: $table.idToken, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get refreshToken => $composableBuilder(
+      column: $table.refreshToken, builder: (column) => ColumnFilters(column));
+}
+
+class $$AuthTokensTableOrderingComposer
+    extends Composer<_$AppDatabase, $AuthTokensTable> {
+  $$AuthTokensTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get accessToken => $composableBuilder(
+      column: $table.accessToken, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get idToken => $composableBuilder(
+      column: $table.idToken, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get refreshToken => $composableBuilder(
+      column: $table.refreshToken,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$AuthTokensTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AuthTokensTable> {
+  $$AuthTokensTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get accessToken => $composableBuilder(
+      column: $table.accessToken, builder: (column) => column);
+
+  GeneratedColumn<String> get idToken =>
+      $composableBuilder(column: $table.idToken, builder: (column) => column);
+
+  GeneratedColumn<String> get refreshToken => $composableBuilder(
+      column: $table.refreshToken, builder: (column) => column);
+}
+
+class $$AuthTokensTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $AuthTokensTable,
+    AuthToken,
+    $$AuthTokensTableFilterComposer,
+    $$AuthTokensTableOrderingComposer,
+    $$AuthTokensTableAnnotationComposer,
+    $$AuthTokensTableCreateCompanionBuilder,
+    $$AuthTokensTableUpdateCompanionBuilder,
+    (AuthToken, BaseReferences<_$AppDatabase, $AuthTokensTable, AuthToken>),
+    AuthToken,
+    PrefetchHooks Function()> {
+  $$AuthTokensTableTableManager(_$AppDatabase db, $AuthTokensTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AuthTokensTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AuthTokensTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AuthTokensTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> accessToken = const Value.absent(),
+            Value<String> idToken = const Value.absent(),
+            Value<String?> refreshToken = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AuthTokensCompanion(
+            accessToken: accessToken,
+            idToken: idToken,
+            refreshToken: refreshToken,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String accessToken,
+            required String idToken,
+            Value<String?> refreshToken = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AuthTokensCompanion.insert(
+            accessToken: accessToken,
+            idToken: idToken,
+            refreshToken: refreshToken,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$AuthTokensTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $AuthTokensTable,
+    AuthToken,
+    $$AuthTokensTableFilterComposer,
+    $$AuthTokensTableOrderingComposer,
+    $$AuthTokensTableAnnotationComposer,
+    $$AuthTokensTableCreateCompanionBuilder,
+    $$AuthTokensTableUpdateCompanionBuilder,
+    (AuthToken, BaseReferences<_$AppDatabase, $AuthTokensTable, AuthToken>),
+    AuthToken,
+    PrefetchHooks Function()>;
+typedef $$NotificationsTableCreateCompanionBuilder = NotificationsCompanion
+    Function({
+  required String id,
+  required String title,
+  required String body,
+  Value<String?> notificationType,
+  Value<String?> notifierId,
+  Value<String?> notifierType,
+  Value<bool?> isRead,
+  Value<DateTime?> createdAt,
+  Value<DateTime?> updatedAt,
+  Value<int> rowid,
+});
+typedef $$NotificationsTableUpdateCompanionBuilder = NotificationsCompanion
+    Function({
+  Value<String> id,
+  Value<String> title,
+  Value<String> body,
+  Value<String?> notificationType,
+  Value<String?> notifierId,
+  Value<String?> notifierType,
+  Value<bool?> isRead,
+  Value<DateTime?> createdAt,
+  Value<DateTime?> updatedAt,
+  Value<int> rowid,
+});
+
+class $$NotificationsTableFilterComposer
+    extends Composer<_$AppDatabase, $NotificationsTable> {
+  $$NotificationsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get body => $composableBuilder(
+      column: $table.body, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get notificationType => $composableBuilder(
+      column: $table.notificationType,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get notifierId => $composableBuilder(
+      column: $table.notifierId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get notifierType => $composableBuilder(
+      column: $table.notifierType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isRead => $composableBuilder(
+      column: $table.isRead, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$NotificationsTableOrderingComposer
+    extends Composer<_$AppDatabase, $NotificationsTable> {
+  $$NotificationsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get body => $composableBuilder(
+      column: $table.body, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get notificationType => $composableBuilder(
+      column: $table.notificationType,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get notifierId => $composableBuilder(
+      column: $table.notifierId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get notifierType => $composableBuilder(
+      column: $table.notifierType,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isRead => $composableBuilder(
+      column: $table.isRead, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$NotificationsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $NotificationsTable> {
+  $$NotificationsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get body =>
+      $composableBuilder(column: $table.body, builder: (column) => column);
+
+  GeneratedColumn<String> get notificationType => $composableBuilder(
+      column: $table.notificationType, builder: (column) => column);
+
+  GeneratedColumn<String> get notifierId => $composableBuilder(
+      column: $table.notifierId, builder: (column) => column);
+
+  GeneratedColumn<String> get notifierType => $composableBuilder(
+      column: $table.notifierType, builder: (column) => column);
+
+  GeneratedColumn<bool> get isRead =>
+      $composableBuilder(column: $table.isRead, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$NotificationsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $NotificationsTable,
+    NotificationData,
+    $$NotificationsTableFilterComposer,
+    $$NotificationsTableOrderingComposer,
+    $$NotificationsTableAnnotationComposer,
+    $$NotificationsTableCreateCompanionBuilder,
+    $$NotificationsTableUpdateCompanionBuilder,
+    (
+      NotificationData,
+      BaseReferences<_$AppDatabase, $NotificationsTable, NotificationData>
+    ),
+    NotificationData,
+    PrefetchHooks Function()> {
+  $$NotificationsTableTableManager(_$AppDatabase db, $NotificationsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$NotificationsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$NotificationsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$NotificationsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> title = const Value.absent(),
+            Value<String> body = const Value.absent(),
+            Value<String?> notificationType = const Value.absent(),
+            Value<String?> notifierId = const Value.absent(),
+            Value<String?> notifierType = const Value.absent(),
+            Value<bool?> isRead = const Value.absent(),
+            Value<DateTime?> createdAt = const Value.absent(),
+            Value<DateTime?> updatedAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              NotificationsCompanion(
+            id: id,
+            title: title,
+            body: body,
+            notificationType: notificationType,
+            notifierId: notifierId,
+            notifierType: notifierType,
+            isRead: isRead,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String title,
+            required String body,
+            Value<String?> notificationType = const Value.absent(),
+            Value<String?> notifierId = const Value.absent(),
+            Value<String?> notifierType = const Value.absent(),
+            Value<bool?> isRead = const Value.absent(),
+            Value<DateTime?> createdAt = const Value.absent(),
+            Value<DateTime?> updatedAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              NotificationsCompanion.insert(
+            id: id,
+            title: title,
+            body: body,
+            notificationType: notificationType,
+            notifierId: notifierId,
+            notifierType: notifierType,
+            isRead: isRead,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$NotificationsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $NotificationsTable,
+    NotificationData,
+    $$NotificationsTableFilterComposer,
+    $$NotificationsTableOrderingComposer,
+    $$NotificationsTableAnnotationComposer,
+    $$NotificationsTableCreateCompanionBuilder,
+    $$NotificationsTableUpdateCompanionBuilder,
+    (
+      NotificationData,
+      BaseReferences<_$AppDatabase, $NotificationsTable, NotificationData>
+    ),
+    NotificationData,
+    PrefetchHooks Function()>;
+typedef $$TaskListsTableCreateCompanionBuilder = TaskListsCompanion Function({
+  required String id,
+  required String userId,
+  required String title,
+  Value<bool?> completed,
+  Value<int> rowid,
+});
+typedef $$TaskListsTableUpdateCompanionBuilder = TaskListsCompanion Function({
+  Value<String> id,
+  Value<String> userId,
+  Value<String> title,
+  Value<bool?> completed,
+  Value<int> rowid,
+});
+
+class $$TaskListsTableFilterComposer
+    extends Composer<_$AppDatabase, $TaskListsTable> {
+  $$TaskListsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get completed => $composableBuilder(
+      column: $table.completed, builder: (column) => ColumnFilters(column));
+}
+
+class $$TaskListsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TaskListsTable> {
+  $$TaskListsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get completed => $composableBuilder(
+      column: $table.completed, builder: (column) => ColumnOrderings(column));
+}
+
+class $$TaskListsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TaskListsTable> {
+  $$TaskListsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<bool> get completed =>
+      $composableBuilder(column: $table.completed, builder: (column) => column);
+}
+
+class $$TaskListsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $TaskListsTable,
+    TaskList,
+    $$TaskListsTableFilterComposer,
+    $$TaskListsTableOrderingComposer,
+    $$TaskListsTableAnnotationComposer,
+    $$TaskListsTableCreateCompanionBuilder,
+    $$TaskListsTableUpdateCompanionBuilder,
+    (TaskList, BaseReferences<_$AppDatabase, $TaskListsTable, TaskList>),
+    TaskList,
+    PrefetchHooks Function()> {
+  $$TaskListsTableTableManager(_$AppDatabase db, $TaskListsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TaskListsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TaskListsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TaskListsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> userId = const Value.absent(),
+            Value<String> title = const Value.absent(),
+            Value<bool?> completed = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TaskListsCompanion(
+            id: id,
+            userId: userId,
+            title: title,
+            completed: completed,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String userId,
+            required String title,
+            Value<bool?> completed = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TaskListsCompanion.insert(
+            id: id,
+            userId: userId,
+            title: title,
+            completed: completed,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$TaskListsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $TaskListsTable,
+    TaskList,
+    $$TaskListsTableFilterComposer,
+    $$TaskListsTableOrderingComposer,
+    $$TaskListsTableAnnotationComposer,
+    $$TaskListsTableCreateCompanionBuilder,
+    $$TaskListsTableUpdateCompanionBuilder,
+    (TaskList, BaseReferences<_$AppDatabase, $TaskListsTable, TaskList>),
+    TaskList,
+    PrefetchHooks Function()>;
+
+class $AppDatabaseManager {
+  final _$AppDatabase _db;
+  $AppDatabaseManager(this._db);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db, _db.users);
+  $$AuthTokensTableTableManager get authTokens =>
+      $$AuthTokensTableTableManager(_db, _db.authTokens);
+  $$NotificationsTableTableManager get notifications =>
+      $$NotificationsTableTableManager(_db, _db.notifications);
+  $$TaskListsTableTableManager get taskLists =>
+      $$TaskListsTableTableManager(_db, _db.taskLists);
 }

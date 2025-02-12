@@ -1,3 +1,7 @@
+import 'package:app_task/src/presentation/form/form_page.dart';
+import 'package:app_task/src/presentation/home/home_page.dart';
+import 'package:app_task/src/presentation/login/login_page.dart';
+import 'package:app_task/src/presentation/register/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app_task/src/application/core/bloc_provider.dart';
@@ -13,14 +17,22 @@ final Map<String, Widget Function(BuildContext context)> routes = {
         create: (_) => provideSplashBloc(),
         child: const SplashPage(),
       ),
-  // LoginPage.route: (_) => BlocProvider(
-  //       create: (_) => provideLoginBloc(),
-  //       child: const LoginPage(),
-  //     ),
-  // ProfilePage.route: (_) => BlocProvider(
-  //       create: (_) => provideProfileBloc(),
-  //       child: const ProfilePage(),
-  //     ),
+  LoginPage.route: (_) => BlocProvider(
+        create: (_) => provideLoginBloc(),
+        child: const LoginPage(),
+      ),
+  RegisterPage.route: (_) => BlocProvider(
+        create: (_) => provideRegisterBloc(),
+        child: const RegisterPage(),
+      ),
+  HomePage.route: (_) => BlocProvider(
+        create: (_) => provideHomeBloc(),
+        child: const HomePage(),
+      ),
+  FormPage.route: (_) => BlocProvider(
+        create: (_) => provideFormFillBloc(),
+        child: const FormPage(),
+      ),
 };
 
 Route<dynamic>? generatedRoutes(RouteSettings settings) {
