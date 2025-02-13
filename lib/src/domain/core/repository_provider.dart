@@ -1,3 +1,5 @@
+import 'package:app_task/src/domain/form/form_repository.dart';
+import 'package:app_task/src/domain/form/form_service.dart';
 import 'package:app_task/src/domain/home/home_repository.dart';
 import 'package:app_task/src/domain/home/home_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -63,8 +65,16 @@ UserService provideUserService() {
 
 HomeRepository provideHomeRepository() {
   return HomeRepository.instance ??= HomeRepository(
-      homeService: HomeService(),
-      taskListDao: provideAppDatabase().taskListDao);
+    homeService: HomeService(),
+    taskListDao: provideAppDatabase().taskListDao,
+  );
+}
+
+FormRepository provideFormRepository() {
+  return FormRepository.instance ??= FormRepository(
+    formService: FormService(),
+    userListDao: provideAppDatabase().userListDao,
+  );
 }
 
 AuthRepository provideAuthRepository() {

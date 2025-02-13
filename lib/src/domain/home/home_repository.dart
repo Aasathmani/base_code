@@ -30,6 +30,14 @@ class HomeRepository {
     return taskListDao.getTaskListList();
   }
 
+  Future<bool> getDeleteTask(String id) async {
+    try {
+      return await homeService.fetchDeleteTask(id);
+    } catch (e) {
+      return false;
+    }
+  }
+
   TaskList? _taskList(Map<String, dynamic> item) {
     return Guard.asNullable<TaskList>(() {
       return TaskList(

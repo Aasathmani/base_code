@@ -1,3 +1,5 @@
+import 'package:app_task/src/domain/auth/auth.dart';
+import 'package:app_task/src/presentation/home/home_page.dart';
 import 'package:app_task/src/presentation/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,8 +35,15 @@ class _SplashState extends BaseState<SplashPage> {
     return BlocConsumer<SplashBloc, SplashState>(
       listener: (context, state) {
         if (state.redirectToLogin ?? false) {
-         Navigator.pushReplacementNamed(context, LoginPage.route);
+          AuthDao().getToken()?.then((token) {
+            if (token != null && token.isNotEmpty) {
+              Navigator.pushReplacementNamed(context, HomePage.route);
+            } else {
+              Navigator.pushReplacementNamed(context, LoginPage.route);
+            }
+          });
         }
+        Navigator.pushReplacementNamed(context, LoginPage.route);
       },
       builder: (context, state) {
         final width = MediaQuery.of(context).size.width;

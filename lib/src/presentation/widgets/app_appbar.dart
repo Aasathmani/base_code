@@ -12,6 +12,7 @@ class AppAppbar extends PreferredSize {
     String? screen,
     String? title,
     List<Widget> actions = const [],
+    Widget? leading,
   }) : super(
           preferredSize: const Size.fromHeight(Units.kAppBarHeight),
           child: _AppAppbar(
@@ -21,6 +22,7 @@ class AppAppbar extends PreferredSize {
             screen: screen,
             title: title,
             actions: actions,
+            leading: leading,
           ),
         );
 }
@@ -31,6 +33,7 @@ class _AppAppbar extends StatelessWidget {
   final String? title;
   final bool shouldShowBackIcon;
   final List<Widget> actions;
+  final Widget? leading;
 
   const _AppAppbar({
     super.key,
@@ -39,6 +42,7 @@ class _AppAppbar extends StatelessWidget {
     this.screen,
     this.title,
     this.actions = const [],
+    this.leading,
   });
 
   @override
@@ -60,6 +64,7 @@ class _AppAppbar extends StatelessWidget {
         ),
       ),
       centerTitle: true,
+      leading: leading,
       actions: [
         if (actions.isNotEmpty) ...actions,
 

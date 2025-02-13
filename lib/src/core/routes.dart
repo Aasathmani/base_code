@@ -29,10 +29,10 @@ final Map<String, Widget Function(BuildContext context)> routes = {
         create: (_) => provideHomeBloc(),
         child: const HomePage(),
       ),
-  FormPage.route: (_) => BlocProvider(
-        create: (_) => provideFormFillBloc(),
-        child: const FormPage(),
-      ),
+  // FormPage.route: (_) => BlocProvider(
+  //       create: (_) => provideFormFillBloc(),
+  //       child: const FormPage(),
+  //  ),
 };
 
 Route<dynamic>? generatedRoutes(RouteSettings settings) {
@@ -48,6 +48,14 @@ Route<dynamic>? generatedRoutes(RouteSettings settings) {
         return _getWebViewRoute(
           settings,
           settings.arguments! as WebViewArgument,
+        );
+      }
+    case FormPage.route:
+      if (settings.arguments != null &&
+          settings.arguments is FormPageArguments) {
+        return _getFormPageRoute(
+          settings,
+          settings.arguments! as FormPageArguments,
         );
       }
     // case OtpPage.route:
@@ -70,6 +78,19 @@ MaterialPageRoute _getWebViewRoute(
     builder: (context) => BlocProvider<WebViewBloc>(
       create: (context) => provideWebViewBloc(argument),
       child: const WebViewPage(),
+    ),
+    settings: settings,
+  );
+}
+
+MaterialPageRoute _getFormPageRoute(
+  RouteSettings settings,
+  FormPageArguments argument,
+) {
+  return MaterialPageRoute(
+    builder: (context) => BlocProvider(
+      create: (context) => provideFormFillBloc(argument),
+      child: const FormPage(),
     ),
     settings: settings,
   );

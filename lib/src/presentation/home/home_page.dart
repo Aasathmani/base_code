@@ -1,12 +1,16 @@
 import 'package:app_task/src/application/home/home_bloc.dart';
+import 'package:app_task/src/application/home/home_event.dart';
 import 'package:app_task/src/application/home/home_state.dart';
 import 'package:app_task/src/core/app_constants.dart';
+import 'package:app_task/src/domain/auth/auth.dart';
 import 'package:app_task/src/domain/database/core/app_database.dart';
 import 'package:app_task/src/presentation/core/app_page.dart';
 import 'package:app_task/src/presentation/core/base_state.dart';
 import 'package:app_task/src/presentation/core/theme/colors.dart';
 import 'package:app_task/src/presentation/core/theme/text_styles.dart';
 import 'package:app_task/src/presentation/form/form_page.dart';
+import 'package:app_task/src/presentation/login/login_page.dart';
+import 'package:app_task/src/presentation/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,7 +35,11 @@ class _HomePageState extends BaseState<HomePage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeBloc, HomeState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state.deleteTaskStatus == true) {
+          bloc!.add(Initialize());
+        }
+      },
       builder: (context, state) {
         return AppPage(
           title: "Task List",
@@ -41,6 +49,21 @@ class _HomePageState extends BaseState<HomePage> {
           actions: [
             _addTaskButton(context),
           ],
+          leading: Padding(
+            padding: const EdgeInsets.only(
+              top: Units.kStandardPadding,
+              left: 20,
+            ),
+            child: InkWell(
+              onTap: () async {
+                await AuthDao().saveToken("");
+                Navigator.pushReplacementNamed(context, LoginPage.route);
+              },
+              child: const Icon(
+                Icons.logout,
+              ),
+            ),
+          ),
           child: Padding(
             padding:
                 const EdgeInsets.symmetric(vertical: Units.kStandardPadding),
@@ -56,7 +79,15 @@ class _HomePageState extends BaseState<HomePage> {
       padding: const EdgeInsets.symmetric(horizontal: Units.kSPadding),
       child: TextButton(
         onPressed: () {
-          Navigator.pushNamed(context, FormPage.route);
+          Navigator.pushNamed(
+            context,
+            FormPage.route,
+            arguments: FormPageArguments(
+              id: "",
+              title: "",
+              complete: "",
+            ),
+          );
         },
         child: Text(
           "Add task",
@@ -94,12 +125,7 @@ class _HomePageState extends BaseState<HomePage> {
   }
 
   Widget _itemLayout(BuildContext context, TaskList item) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        color: AppColors.white,
-        border: Border.all(),
-      ),
+    return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Units.kSPadding),
         child: Column(
@@ -123,9 +149,40 @@ class _HomePageState extends BaseState<HomePage> {
 
   Widget _titleTextWithData(BuildContext context, TaskList item) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("Title : ", style: TextStyles.body1BoldMarkdown(context)),
-        Expanded(child: Text(item.title, overflow: TextOverflow.visible)),
+        Expanded(
+          child: Row(
+            children: [
+              Text("Title: ", style: TextStyles.body1BoldMarkdown(context)),
+              Expanded(
+                child: Text(
+                  item.title,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  softWrap: false,
+                ),
+              ),
+            ],
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              FormPage.route,
+              arguments: FormPageArguments(
+                id: item.userId,
+                title: item.title,
+                complete: item.completed.toString(),
+              ),
+            );
+          },
+          child: const Icon(
+            Icons.edit,
+            size: 20,
+          ),
+        ),
       ],
     );
   }
@@ -133,9 +190,77 @@ class _HomePageState extends BaseState<HomePage> {
   Widget _completeStatusWithData(BuildContext context, TaskList item) {
     return Row(
       children: [
-        Text("Complete : ", style: TextStyles.body1BoldMarkdown(context)),
-        Text(item.completed.toString()),
+        Expanded(
+          child: Row(
+            children: [
+              Text("Complete : ", style: TextStyles.body1BoldMarkdown(context)),
+              Text(item.completed.toString()),
+            ],
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            showDialog<void>(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text("Are you want to delete the task"),
+                  actionsAlignment: MainAxisAlignment.spaceEvenly,
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _cancelButton(context),
+                        _confirmButton(context, item),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            );
+            //bloc!.add(DeleteIconTapped(item.id));
+          },
+          child: const Icon(
+            Icons.delete,
+            size: 20,
+          ),
+        ),
       ],
     );
   }
+
+  Widget _cancelButton(BuildContext context) {
+    return AppButton(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      label: "no",
+      color: AppColors.transparent,
+      labelStyle:
+          TextStyles.body1Bold(context)!.copyWith(color: AppColors.black),
+    );
+  }
+
+  Widget _confirmButton(BuildContext context, TaskList item) {
+    return AppButton(
+      onTap: () {
+        bloc!.add(DeleteIconTapped(item.id));
+        Navigator.pop(context);
+      },
+      color: AppColors.ashBlue,
+      label: "Confirm",
+    );
+  }
+}
+
+class FormPageArguments {
+  String id;
+  String title;
+  String complete;
+
+  FormPageArguments({
+    required this.id,
+    required this.title,
+    required this.complete,
+  });
 }

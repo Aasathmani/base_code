@@ -5,6 +5,7 @@ import 'package:app_task/src/core/app_constants.dart';
 import 'package:app_task/src/presentation/core/app_page.dart';
 import 'package:app_task/src/presentation/core/base_state.dart';
 import 'package:app_task/src/presentation/core/theme/colors.dart';
+import 'package:app_task/src/presentation/core/theme/text_styles.dart';
 import 'package:app_task/src/presentation/home/home_page.dart';
 import 'package:app_task/src/presentation/register/register_page.dart';
 import 'package:app_task/src/presentation/widgets/app_button.dart';
@@ -22,13 +23,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends BaseState<LoginPage> {
-  LoginBloc? _bloc;
+  LoginBloc? bloc;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _bloc = BlocProvider.of<LoginBloc>(context);
-    _bloc!.message.listen((value) => showMessage(value));
+    bloc = BlocProvider.of<LoginBloc>(context);
+    bloc!.message.listen((value) => showMessage(value));
   }
 
   @override
@@ -36,7 +37,7 @@ class _LoginPageState extends BaseState<LoginPage> {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.loginSuccess == true) {
-          Navigator.pushNamed(context, HomePage.route);
+          Navigator.pushReplacementNamed(context, HomePage.route);
         }
       },
       builder: (context, state) {
@@ -44,7 +45,7 @@ class _LoginPageState extends BaseState<LoginPage> {
           title: "",
           isBackButtonRequired: false,
           retryOnTap: () {},
-          processStateStream: _bloc!.stream.map((state) => state.processState),
+          processStateStream: bloc!.stream.map((state) => state.processState),
           child: _getBodyLayout(context),
         );
       },
@@ -92,19 +93,7 @@ class _LoginPageState extends BaseState<LoginPage> {
             const SizedBox(
               height: 10,
             ),
-            BorderedTextField(
-              key: const Key("email"),
-              prefixIcon: const Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: Icon(Icons.email_rounded, color: AppColors.black),
-              ),
-              backgroundColor: AppColors.white,
-              labelText: 'Email',
-              textColor: AppColors.black,
-              onTextChanged: (text) {
-                _bloc!.add(EmailChanged(text));
-              },
-            ),
+            _emailTextFied(context),
             const SizedBox(height: 16),
             const Text("Password"),
             const SizedBox(
@@ -116,17 +105,20 @@ class _LoginPageState extends BaseState<LoginPage> {
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: Icon(Icons.lock, color: AppColors.black),
               ),
+              style: TextStyles.bodyRegular(context),
               backgroundColor: AppColors.white,
               labelText: 'Password',
+              obscureText: true,
+              maxLines: 1,
               onTextChanged: (text) {
-                _bloc!.add(PasswordChange(text));
+                bloc!.add(PasswordChange(text));
               },
             ),
             const SizedBox(height: 60),
             AppButton(
               onTap: () {
-                Navigator.pushNamed(context, HomePage.route);
-                //_bloc!.add(LoginButtonTapped());
+                // Navigator.pushNamed(context, HomePage.route);
+                bloc!.add(LoginButtonTapped());
               },
               label: "Login".toUpperCase(),
               color: AppColors.ashBlue,
@@ -158,6 +150,23 @@ class _LoginPageState extends BaseState<LoginPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _emailTextFied(BuildContext context) {
+    return BorderedTextField(
+      key: const Key("email"),
+      prefixIcon: const Padding(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        child: Icon(Icons.email_rounded, color: AppColors.black),
+      ),
+      backgroundColor: AppColors.white,
+      labelText: 'Email',
+      textColor: AppColors.black,
+      style: TextStyles.bodyRegular(context),
+      onTextChanged: (text) {
+        bloc!.add(EmailChanged(text));
+      },
     );
   }
 }

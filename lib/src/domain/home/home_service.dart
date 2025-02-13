@@ -15,8 +15,11 @@ class HomeService {
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> jsonData = jsonDecode(response.body) as List<dynamic>;
-        return jsonData.map((e) => e as Map<String, dynamic>).toList(); // Explicit cast
+        final List<dynamic> jsonData =
+            jsonDecode(response.body) as List<dynamic>;
+        return jsonData
+            .map((e) => e as Map<String, dynamic>)
+            .toList(); // Explicit cast
       } else {
         throw APIValidationFailException(
           message: "Failed to fetch tasks. Status Code: ${response.statusCode}",
@@ -33,31 +36,22 @@ class HomeService {
     }
   }
 
-  // Future<Object> fetchTaskList() async {
-  //   Map<String, dynamic> responseVal = {};
-  //   try {
-  //     var url =
-  //         Uri.parse("https://jsonplaceholder.typicode.com/todos");
-  //     final response =
-  //         await http.get(url, headers: {"Content-Type": "application/json"});
-  //     final List<dynamic> jsonData = jsonDecode(response.body);
-  //     // return jsonData.cast<Map<String, dynamic>>();
-  //     if (response.statusCode == 200) {
-  //       return responseVal;
-  //     } else if (response.statusCode == 400) {
-  //       throw APIValidationFailException(
-  //         message: toString(responseVal),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     if (e is APIValidationFailException) {
-  //       rethrow;
-  //     }
-  //     throw CustomException(
-  //       'Login Failed.',
-  //       message: e.toString(),
-  //     );
-  //   }
-  //   return responseVal;
-  // }
+  Future<bool> fetchDeleteTask(String id) async {
+    try {
+      var url = Uri.parse(
+          "https://jsonplaceholder.typicode.com/todos/$id"); // Removed extra space
+      final response = await http.delete(
+        url,
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

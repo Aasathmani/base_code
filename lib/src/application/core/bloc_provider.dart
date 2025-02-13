@@ -32,7 +32,9 @@ LoginBloc provideLoginBloc() {
 }
 
 RegisterBloc provideRegisterBloc() {
-  return RegisterBloc();
+  return RegisterBloc(
+    authRepository: provideAuthRepository(),
+  );
 }
 
 HomeBloc provideHomeBloc() {
@@ -41,8 +43,13 @@ HomeBloc provideHomeBloc() {
   );
 }
 
-FormFillBloc provideFormFillBloc() {
-  return FormFillBloc();
+FormFillBloc provideFormFillBloc(FormPageArguments argument) {
+  return FormFillBloc(
+    formRepository: provideFormRepository(),
+    id: argument.id,
+    title: argument.title,
+    completed: argument.complete,
+  );
 }
 
 WebViewBloc provideWebViewBloc(WebViewArgument argument) {

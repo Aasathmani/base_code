@@ -16,6 +16,7 @@ class AppPage extends StatelessWidget {
   final Function() retryOnTap;
   final Stream<ProcessState> processStateStream;
   final List<Widget> actions;
+  final Widget? leading;
 
   const AppPage({
     required this.title,
@@ -24,6 +25,7 @@ class AppPage extends StatelessWidget {
     required this.retryOnTap,
     required this.processStateStream,
     this.actions = const [],
+    this.leading,
   });
 
   @override
@@ -50,6 +52,7 @@ class AppPage extends StatelessWidget {
       onUserTap: () {},
       isBackButtonRequired: isBackButtonRequired,
       actions: actions,
+      leading: leading,
     );
   }
 

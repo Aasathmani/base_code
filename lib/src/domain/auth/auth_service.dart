@@ -52,7 +52,7 @@ class AuthService {
         headers: {"Content-Type": "application/json"},
         body: data,
       );
-      responseVal = toGenericMap(response.body);
+      responseVal = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 200) {
         return responseVal;
       } else if (response.statusCode == 400) {
@@ -68,7 +68,41 @@ class AuthService {
         'Login Failed.',
         message: e.toString(),
       );
+    }
+    return responseVal;
+  }
 
+  Future<Map<String, dynamic>> fetchRegister(
+    String? email,
+    String? password,
+  ) async {
+    Map<String, dynamic> responseVal = {};
+    try {
+      const url = "https://reqres.in/api/register";
+      final data = jsonEncode(
+        {"email": email, "password": password},
+      );
+      final Response response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: data,
+      );
+      responseVal = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        return responseVal;
+      } else if (response.statusCode == 400) {
+        throw APIValidationFailException(
+          message: toString(responseVal['message']),
+        );
+      }
+    } catch (e) {
+      if (e is APIValidationFailException) {
+        rethrow;
+      }
+      throw CustomException(
+        'Register Failed.',
+        message: e.toString(),
+      );
     }
     return responseVal;
   }

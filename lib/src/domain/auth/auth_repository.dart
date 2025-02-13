@@ -60,6 +60,22 @@ class AuthRepository {
     try {
       final dataFromResponse = await authServices.fetchLogin(email, password);
       final Auth auth = Auth.fromJson(dataFromResponse);
+      await AuthDao().saveToken(auth.token!);
+      return auth;
+    } catch (e) {
+      if (e is APIValidationFailException) {
+        rethrow;
+      }
+    }
+    return null;
+  }
+
+
+  Future<Auth?> getRegister(String email, String password) async {
+    try {
+      final dataFromResponse = await authServices.fetchRegister(email, password);
+      final Auth auth = Auth.fromJson(dataFromResponse);
+      await AuthDao().saveToken(auth.token!);
       return auth;
     } catch (e) {
       if (e is APIValidationFailException) {

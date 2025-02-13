@@ -187,6 +187,7 @@ class AppIcons {
 }
 class PriorityOptions{
   static List<String> priorityOptions = ["High", "Medium", "Low"];
+  static List<String> taskStatus = ["ToDo", "In-Progress", "Done"];
 }
 
 
