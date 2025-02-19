@@ -9,26 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:946495234586:android:e4ed0f438c119e528ee7a3",
         "android_client_info": {
-          "package_name": "com.app.task.qa"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAgPbllt5QWsO-DoaYLG57mdzJDIXxN7tg"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:946495234586:android:e4ed0f438c119e528ee7a3",
-        "android_client_info": {
-          "package_name": "com.app.task.qa"
+          "package_name": "com.app.task"
         }
       },
       "oauth_client": [],

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "923268469751",
-    "project_id": "fragomen-fes",
-    "storage_bucket": "fragomen-fes.appspot.com"
+    "project_number": "946495234586",
+    "project_id": "apptask-aad1b",
+    "storage_bucket": "apptask-aad1b.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:923268469751:android:813a77f9540c85d515d4f2",
+        "mobilesdk_app_id": "1:946495234586:android:e4ed0f438c119e528ee7a3",
         "android_client_info": {
           "package_name": "com.app.task.dev"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyASS_O-hGVAdG3qJ4kr5HIyNnq1Q_uFcYA"
+          "current_key": "AIzaSyAgPbllt5QWsO-DoaYLG57mdzJDIXxN7tg"
         }
       ],
       "services": {

@@ -9,11 +9,11 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.fragomen.fesproject.dev</string>
+	<string>com.app.task.dev</string>
 	<key>PROJECT_ID</key>
-	<string>fragomen-fes</string>
+	<string>app-task</string>
 	<key>STORAGE_BUCKET</key>
-	<string>fragomen-fes.appspot.com</string>
+	<string>app-task.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
